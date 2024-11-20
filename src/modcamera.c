@@ -36,8 +36,8 @@ typedef struct _camera_obj_t {
     bool                   used;
 } camera_obj_t;
 
-//STATIC camera_obj_t camera_obj;
-STATIC bool camera_init_helper(camera_obj_t *camera, size_t n_pos_args, const mp_obj_t *pos_args, mp_map_t *kw_args) {
+//static camera_obj_t camera_obj;
+static bool camera_init_helper(camera_obj_t *camera, size_t n_pos_args, const mp_obj_t *pos_args, mp_map_t *kw_args) {
       enum {
         ARG_format,
         ARG_framesize,
@@ -175,7 +175,7 @@ STATIC bool camera_init_helper(camera_obj_t *camera, size_t n_pos_args, const mp
 }
 
 
-STATIC mp_obj_t camera_init(mp_uint_t n_pos_args, const mp_obj_t *pos_args, mp_map_t *kw_args) {
+static mp_obj_t camera_init(mp_uint_t n_pos_args, const mp_obj_t *pos_args, mp_map_t *kw_args) {
     
     camera_obj_t camera_obj;
 
@@ -188,10 +188,10 @@ STATIC mp_obj_t camera_init(mp_uint_t n_pos_args, const mp_obj_t *pos_args, mp_m
         return mp_const_false;
     }
 }
-STATIC MP_DEFINE_CONST_FUN_OBJ_KW(camera_init_obj, 1, camera_init);
+static MP_DEFINE_CONST_FUN_OBJ_KW(camera_init_obj, 1, camera_init);
 
 
-STATIC mp_obj_t camera_deinit(){
+static mp_obj_t camera_deinit(){
     esp_err_t err = esp_camera_deinit();
     if (err != ESP_OK) {
         ESP_LOGE(TAG, "Camera deinit Failed");
@@ -200,10 +200,10 @@ STATIC mp_obj_t camera_deinit(){
 
     return mp_const_true;
 }
-STATIC MP_DEFINE_CONST_FUN_OBJ_0(camera_deinit_obj, camera_deinit);
+static MP_DEFINE_CONST_FUN_OBJ_0(camera_deinit_obj, camera_deinit);
 
 
-STATIC mp_obj_t camera_capture(){
+static mp_obj_t camera_capture(){
     //acquire a frame
     camera_fb_t * fb = esp_camera_fb_get();
     if (!fb) {
@@ -217,9 +217,9 @@ STATIC mp_obj_t camera_capture(){
     esp_camera_fb_return(fb);
     return image;
 }
-STATIC MP_DEFINE_CONST_FUN_OBJ_0(camera_capture_obj, camera_capture);
+static MP_DEFINE_CONST_FUN_OBJ_0(camera_capture_obj, camera_capture);
 
-STATIC mp_obj_t camera_flip(mp_obj_t direction){
+static mp_obj_t camera_flip(mp_obj_t direction){
     sensor_t * s = esp_camera_sensor_get();
     if (!s) {
         ESP_LOGE(TAG, "Flipping Failed");
@@ -229,9 +229,9 @@ STATIC mp_obj_t camera_flip(mp_obj_t direction){
     s->set_vflip(s, dir);
     return mp_const_none;
 }
-STATIC MP_DEFINE_CONST_FUN_OBJ_1(camera_flip_obj, camera_flip);
+static MP_DEFINE_CONST_FUN_OBJ_1(camera_flip_obj, camera_flip);
 
-STATIC mp_obj_t camera_mirror(mp_obj_t direction){
+static mp_obj_t camera_mirror(mp_obj_t direction){
     sensor_t * s = esp_camera_sensor_get();
     if (!s) {
         ESP_LOGE(TAG, "Mirroring Failed");
@@ -241,9 +241,9 @@ STATIC mp_obj_t camera_mirror(mp_obj_t direction){
     s->set_hmirror(s, dir);
     return mp_const_none;
 }
-STATIC MP_DEFINE_CONST_FUN_OBJ_1(camera_mirror_obj, camera_mirror);
+static MP_DEFINE_CONST_FUN_OBJ_1(camera_mirror_obj, camera_mirror);
 
-STATIC mp_obj_t camera_framesize(mp_obj_t what){
+static mp_obj_t camera_framesize(mp_obj_t what){
     sensor_t * s = esp_camera_sensor_get();
     if (!s) {
         ESP_LOGE(TAG, "Framesize Failed");
@@ -280,9 +280,9 @@ STATIC mp_obj_t camera_framesize(mp_obj_t what){
 
     return mp_const_none;
 }
-STATIC MP_DEFINE_CONST_FUN_OBJ_1(camera_framesize_obj, camera_framesize);
+static MP_DEFINE_CONST_FUN_OBJ_1(camera_framesize_obj, camera_framesize);
 
-STATIC mp_obj_t camera_quality(mp_obj_t what){
+static mp_obj_t camera_quality(mp_obj_t what){
     sensor_t * s = esp_camera_sensor_get();
     if (!s) {
         ESP_LOGE(TAG, "Quality Failed");
@@ -292,9 +292,9 @@ STATIC mp_obj_t camera_quality(mp_obj_t what){
     s->set_quality(s, val);
     return mp_const_none;
 }
-STATIC MP_DEFINE_CONST_FUN_OBJ_1(camera_quality_obj, camera_quality);
+static MP_DEFINE_CONST_FUN_OBJ_1(camera_quality_obj, camera_quality);
 
-STATIC mp_obj_t camera_contrast(mp_obj_t what){
+static mp_obj_t camera_contrast(mp_obj_t what){
     //acquire a frame
     sensor_t * s = esp_camera_sensor_get();
     if (!s) {
@@ -305,9 +305,9 @@ STATIC mp_obj_t camera_contrast(mp_obj_t what){
     s->set_contrast(s, val);
     return mp_const_none;
 }
-STATIC MP_DEFINE_CONST_FUN_OBJ_1(camera_contrast_obj, camera_contrast);
+static MP_DEFINE_CONST_FUN_OBJ_1(camera_contrast_obj, camera_contrast);
 
-STATIC mp_obj_t camera_saturation(mp_obj_t what){
+static mp_obj_t camera_saturation(mp_obj_t what){
     //acquire a frame
     sensor_t * s = esp_camera_sensor_get();
     if (!s) {
@@ -318,9 +318,9 @@ STATIC mp_obj_t camera_saturation(mp_obj_t what){
     s->set_saturation(s, val); // -2,2 (default 0). -2 grayscale
     return mp_const_none;
 }
-STATIC MP_DEFINE_CONST_FUN_OBJ_1(camera_saturation_obj, camera_saturation);
+static MP_DEFINE_CONST_FUN_OBJ_1(camera_saturation_obj, camera_saturation);
 
-STATIC mp_obj_t camera_brightness(mp_obj_t what){
+static mp_obj_t camera_brightness(mp_obj_t what){
     sensor_t * s = esp_camera_sensor_get();
     if (!s) {
         ESP_LOGE(TAG, "Brightness Failed");
@@ -330,9 +330,9 @@ STATIC mp_obj_t camera_brightness(mp_obj_t what){
     s->set_brightness(s, val); // -2,2 (default 0). 2 brightest
     return mp_const_none;
 }
-STATIC MP_DEFINE_CONST_FUN_OBJ_1(camera_brightness_obj, camera_brightness);
+static MP_DEFINE_CONST_FUN_OBJ_1(camera_brightness_obj, camera_brightness);
 
-STATIC mp_obj_t camera_speffect(mp_obj_t what){
+static mp_obj_t camera_speffect(mp_obj_t what){
     sensor_t * s = esp_camera_sensor_get();
     if (!s) {
         ESP_LOGE(TAG, "Special Effect Failed");
@@ -349,9 +349,9 @@ STATIC mp_obj_t camera_speffect(mp_obj_t what){
 				   // 6 - retro
     return mp_const_none;
 }
-STATIC MP_DEFINE_CONST_FUN_OBJ_1(camera_speffect_obj, camera_speffect);
+static MP_DEFINE_CONST_FUN_OBJ_1(camera_speffect_obj, camera_speffect);
 
-STATIC mp_obj_t camera_whitebalance(mp_obj_t what){
+static mp_obj_t camera_whitebalance(mp_obj_t what){
     sensor_t * s = esp_camera_sensor_get();
     if (!s) {
         ESP_LOGE(TAG, "White Balance Failed");
@@ -366,9 +366,9 @@ STATIC mp_obj_t camera_whitebalance(mp_obj_t what){
                                    // 4 - home
     return mp_const_none;
 }
-STATIC MP_DEFINE_CONST_FUN_OBJ_1(camera_whitebalance_obj, camera_whitebalance);
+static MP_DEFINE_CONST_FUN_OBJ_1(camera_whitebalance_obj, camera_whitebalance);
 
-STATIC const mp_rom_map_elem_t camera_module_globals_table[] = {
+static const mp_rom_map_elem_t camera_module_globals_table[] = {
     { MP_ROM_QSTR(MP_QSTR___name__), MP_ROM_QSTR(MP_QSTR_camera) },
 
     { MP_ROM_QSTR(MP_QSTR_init), MP_ROM_PTR(&camera_init_obj) },
@@ -436,7 +436,7 @@ STATIC const mp_rom_map_elem_t camera_module_globals_table[] = {
 
 };
 
-STATIC MP_DEFINE_CONST_DICT(camera_module_globals, camera_module_globals_table);
+static MP_DEFINE_CONST_DICT(camera_module_globals, camera_module_globals_table);
 
 const mp_obj_module_t mp_module_camera_system = {
     .base = { &mp_type_module },
